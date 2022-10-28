@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- <form action="form1.php" method="post">
+        <label>Name</label>: <input type="text" name="name"><br>
+        <label>City</label>: <input type="text" name="city"><br>
+        <button type ="submit">Add </button>
+        request go through browser, so we use php and all
+    </form> -->
+    <form onsubmit="return false" onreset="return false">
+        <label>Name</label>: <input type="text" id="nameFeild" name = "name" /></br>
+        <label>City</label>: <input type="text" id="cityFeild" name= "city"  /></br>
+        <button type="button" id="btnAdd">Add </button>
+    </form>
+
+    <script>
+
+        const nameFeild = document.getElementById('nameFeild');
+        const cityFeild = document.getElementById('cityFeild');
+        const btnAdd = document.getElementById('btnAdd');
+
+
+        function sendData() {
+            const name = nameFeild.value;
+            const city = cityFeild.value;
+
+            
+            const request = new XMLHttpRequest();
+           // request.open("GET", "insert.php?Name="+name+"&City= "+city, false);
+//  request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+           request.open('GET', 'insert.php?Name='+name+'&City='+city, true);
+            //request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            
+            // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            // request.send(' Name='+name+'&City='+city);
+            request.send("Name="+name+"&City="+city);
+            
+        }
+
+        btnAdd.addEventListener('click',sendData);
+        nameFeild.value ='';
+        cityFeild.value = '';  
+
+    </script>
+
+</body>
+
+</html>

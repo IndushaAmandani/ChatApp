@@ -1,0 +1,189 @@
+<html>
+
+<head>
+    <title> Chat APP </title>
+    <style>
+        #chatContainer {
+            width: 300px;
+            height: 400px;
+            border: 2px solid #ccc;
+            overflow: auto;
+        }
+
+        #senderChat {
+            margin-top: 10px;
+            width: 250px;
+            margin-right: 7px;
+        }
+        #recieverChat{
+            margin-top: 10px;
+            width: 250px;
+            margin-right: 7px;
+        }
+        .senderMsgContainer {
+            text-align: left;
+        }
+
+        .recieverMsgContainer {
+            text-align: right;
+        }
+
+        .senderMsg {
+            max-width: 80%;
+            display: inline-block;
+            background-color: rgb(71, 104, 93);
+            color: white;
+            border-radius: 30px;
+            padding: 5px 10px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            margin-left: 5px;
+            cursor: default;
+        }
+
+        .recieverMsg {
+            max-width: 80%;
+            display: inline-block;
+            background-color: rgb(94, 72, 72);
+            color: rgb(214, 205, 205);
+            border-radius: 30px;
+            padding: 5px 10px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            margin-right: 5px;
+        }
+        .sendAt{
+            color: rgb(167, 161, 161);
+            font-size: 10px;
+            display:  none;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-top: -4px; 
+        } 
+        .senderMsgContainer:hover .sendAt{
+              display: block;
+        }
+        .recieverMsgContainer:hover .sendAt {
+            display: block;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chatContainer"></div> 
+
+
+    </div><br />
+
+    <input type="text" placeholder="Type as sender" id="senderChat" /><button id="btnSender">Send</button></div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <input type="text" placeholder="Type as reciever" id="recieverChat" /><button id="btnReciever">Send</button></div>
+
+
+
+
+
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+
+        const senderChat = document.getElementById('senderChat');
+        const recieverChat = document.getElementById('recieverChat');
+        const btnSender = document.getElementById('btnSender');
+        const btnReciever = document.getElementById('btnReciever');
+
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+          
+        function addChatFromSender() {
+            const msg = senderChat.value.trim();
+            if (msg === '') {return;} 
+
+            const div = document.createElement('div');
+            const span = document.createElement('span');
+            span.innerHTML = msg;
+            span.classList.add('senderMsg');
+            div.appendChild(span);
+            div.classList.add('senderMsgContainer');
+
+            chatContainer.appendChild(div);
+            scrollToBottom();
+            senderChat.value = '';
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'chat_insert2.php');
+            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            request.send('message=' + msg + '&sender=user1&reciever=user2');
+        }
+
+        btnSender.addEventListener('click', addChatFromSender);
+
+
+      
+
+
+ 
+
+//reciever
+
+
+        function addChatFromReciever() {
+            const msg = recieverChat.value.trim();
+            if (msg === '') {return;}
+
+            const div = document.createElement('div');
+            const span = document.createElement('span');
+            span.innerHTML = msg;
+            span.classList.add('recieverMsg');
+            div.appendChild(span);
+            div.classList.add('recieverMsgContainer');
+
+            chatContainer.appendChild(div);
+            scrollToBottom();
+            recieverChat.value = '';
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'chat_insert2.php',true);
+            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            request.send('message=' + msg + '&sender=user2&reciever=user1');
+        }
+
+
+
+   
+        btnReciever.addEventListener('click', addChatFromReciever);
+
+        function loadOldChats(){
+            const request = new XMLHttpRequest();
+             request.onload = function() {
+                chatContainer.innerHTML = request.responseText;
+                scrollToBottom();
+
+            } 
+
+            request.open('get','chat_data.php',true);
+            request.send();
+
+        }
+
+
+        document.body.onload = function(){
+            loadOldChats();
+           
+        };
+
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>
